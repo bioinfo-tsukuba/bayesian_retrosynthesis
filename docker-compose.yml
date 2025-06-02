@@ -1,0 +1,51 @@
+services:
+  bayesian-retrosynthesis:
+    build: .
+    container_name: bayesian-retrosynthesis
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONPATH=/app
+    ports:
+      - "8000:8000"
+    command: python demo.py
+
+  # Alternative service for running specific scripts
+  retrosynthesis-dev:
+    build: .
+    container_name: retrosynthesis-dev
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONPATH=/app
+    profiles:
+      - dev
+    command: /bin/bash
+
+  # Service for running evaluations
+  retrosynthesis-eval:
+    build: .
+    container_name: retrosynthesis-eval
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+    profiles:
+      - eval
+    command: python evaluation.py
+
+  # Service for running the main algorithm
+  retrosynthesis-main:
+    build: .
+    container_name: retrosynthesis-main
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+    profiles:
+      - main
+    command: python bayesian_retrosynthesis.py
