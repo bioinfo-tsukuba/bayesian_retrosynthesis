@@ -1,0 +1,37 @@
+[project]
+name = "bayesian_retrosynthesis"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Junnosuke Imai" }
+]
+license = { text = "none" }
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+
+dependencies = [
+    "biopython >=1.85,<2.0",
+    "python-dotenv >=1.1.0,<2.0.0",
+    "black >=25.1.0,<26.0.0",
+    "isort >=6.0.1,<7.0.0",
+    "jupyter >=1.1.1,<2.0.0",
+    "ipykernel >=6.29.0,<7.0.0",         # ← 追加：VS CodeやJupyterでカーネルを使うのに必要
+    "tree >=0.2.4,<0.3.0",
+    "pandas >=2.2.3,<3.0.0",
+    "numpy >=1.26,<2.0.0",
+    "scipy >=1.15.3,<2.0.0",
+    "matplotlib >=3.7.0,<4.0.0",
+    "seaborn >=0.13.2,<0.14.0",
+    "networkx >=3.5,<4.0",
+    "llvmlite (>=0.44.0,<0.45.0)",
+    "umap-learn >=0.5.7,<0.6.0",  # ← ここを追加
+    "scikit-learn (>=1.7.0,<2.0.0)"
+]
+
+[tool.jupyter]
+# オプション：カーネルに名前をつけたい場合
+kernel-name = "bayesian_retrosynthesis"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

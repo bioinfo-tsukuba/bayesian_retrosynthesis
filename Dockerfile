@@ -1,34 +1,23 @@
-# Bayesian Retrosynthesis - Docker Environment
-FROM python:3.9-slim
+FROM python:3.12
 
-# Set working directory
-WORKDIR /app
+WORKDIR /home
+ENV PYTHONBUFFERED=1
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    locales curl less vim llvm && \
+    localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 && \
+    pip install --upgrade pip && \
+    curl -sSL https://install.python-poetry.org | python3 - && \
+    export PATH="/root/.local/bin:$PATH" && \
+    poetry config virtualenvs.create false && \
+    poetry config virtualenvs.in-project true
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+ENV LANG=ja_JP.UTF-8
+ENV LANGUAGE=ja_JP:ja
+ENV LC_ALL=ja_JP.UTF-8
+ENV TZ=JST-9
+ENV TERM=xterm
+ENV PATH="/root/.local/bin:$PATH"
+RUN echo 'export PATH="/root/.local/bin:$PATH"' > /etc/profile.d/poetry.sh
 
-# Copy requirements first for better caching
-COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy all project files
-COPY . .
-
-# Create a non-root user for security
-RUN useradd -m -u 1000 retrosynthesis && \
-    chown -R retrosynthesis:retrosynthesis /app
-USER retrosynthesis
-
-# Expose port for potential web interface (optional)
-EXPOSE 8000
-
-# Default command - run the interactive demo
-CMD ["python", "demo.py"]
